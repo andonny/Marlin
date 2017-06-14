@@ -118,7 +118,8 @@
 // The following define selects which electronics board you have.
 // Please choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
-  #define MOTHERBOARD BOARD_RAMPS_14_EFB
+  //AG changed board configuration from Extruder, Fan, Bed to Extruder0, Extruder1, Fan.
+  #define MOTHERBOARD BOARD_RAMPS_14_EEF
 #endif
 
 // Optional custom name for your RepStrap or other custom machine
@@ -131,10 +132,12 @@
 
 // This defines the number of extruders
 // :[1, 2, 3, 4, 5]
-#define EXTRUDERS 1
+//AG Before changing # of extruders to 2, the board configuration has to be changed
+#define EXTRUDERS 2
 
 // For Cyclops or any "multi-extruder" that shares a single nozzle.
-//#define SINGLENOZZLE
+//AG enabled singlenozzle
+#define SINGLENOZZLE
 
 // A dual extruder that uses a single stepper motor
 // Don't forget to set SSDE_SERVO_ANGLES and HOTEND_OFFSET_X/Y/Z
@@ -235,7 +238,7 @@
  *
  * :{ '0': "Not used", '1':"100k / 4.7k - EPCOS", '2':"200k / 4.7k - ATC Semitec 204GT-2", '3':"Mendel-parts / 4.7k", '4':"10k !! do not use for a hotend. Bad resolution at high temp. !!", '5':"100K / 4.7k - ATC Semitec 104GT-2 (Used in ParCan & J-Head)", '6':"100k / 4.7k EPCOS - Not as accurate as Table 1", '7':"100k / 4.7k Honeywell 135-104LAG-J01", '8':"100k / 4.7k 0603 SMD Vishay NTCS0603E3104FXT", '9':"100k / 4.7k GE Sensing AL03006-58.2K-97-G1", '10':"100k / 4.7k RS 198-961", '11':"100k / 4.7k beta 3950 1%", '12':"100k / 4.7k 0603 SMD Vishay NTCS0603E3104FXT (calibrated for Makibox hot bed)", '13':"100k Hisens 3950  1% up to 300°C for hotend 'Simple ONE ' & hotend 'All In ONE'", '20':"PT100 (Ultimainboard V2.x)", '51':"100k / 1k - EPCOS", '52':"200k / 1k - ATC Semitec 204GT-2", '55':"100k / 1k - ATC Semitec 104GT-2 (Used in ParCan & J-Head)", '60':"100k Maker's Tool Works Kapton Bed Thermistor beta=3950", '66':"Dyze Design 4.7M High Temperature thermistor", '70':"the 100K thermistor found in the bq Hephestos 2", '71':"100k / 4.7k Honeywell 135-104LAF-J01", '147':"Pt100 / 4.7k", '1047':"Pt1000 / 4.7k", '110':"Pt100 / 1k (non-standard)", '1010':"Pt1000 / 1k (non standard)", '-3':"Thermocouple + MAX31855 (only for sensor 0)", '-2':"Thermocouple + MAX6675 (only for sensor 0)", '-1':"Thermocouple + AD595",'998':"Dummy 1", '999':"Dummy 2" }
  */
-#define TEMP_SENSOR_0 5
+#define TEMP_SENSOR_0 5 //AG Temperature sensor Semitec 104-GT2 Thermistor for prometheus dual extrusion
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
@@ -264,8 +267,10 @@
 // The minimal temperature defines the temperature below which the heater will not be enabled It is used
 // to check that the wiring to the thermistor is not broken.
 // Otherwise this would lead to the heater being powered on all the time.
-#define HEATER_0_MINTEMP 10
-#define HEATER_1_MINTEMP 10
+//AG changed mintemp for hater 0 back to 5
+#define HEATER_0_MINTEMP 5
+//AG disabled Heater 1
+//#define HEATER_1_MINTEMP 10
 #define HEATER_2_MINTEMP 10
 #define HEATER_3_MINTEMP 10
 #define HEATER_4_MINTEMP 10
@@ -303,9 +308,9 @@
 
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
-  #define  DEFAULT_Kp 25
-  #define  DEFAULT_Ki 1.3
-  #define  DEFAULT_Kd 122
+  #define  DEFAULT_Kp 21.45    //AG changed from 25 to 21.45
+  #define  DEFAULT_Ki 2.34     //AG changed from 1.3 to 2.34
+  #define  DEFAULT_Kd 49.2    //AG changed from 122 to 49.2
 
 #endif // PIDTEMP
 
@@ -356,12 +361,14 @@
 // It also enables the M302 command to set the minimum extrusion temperature
 // or to allow moving the extruder regardless of the hotend temperature.
 // *** IT IS HIGHLY RECOMMENDED TO LEAVE THIS OPTION ENABLED! ***
-#define PREVENT_COLD_EXTRUSION
+//AG Disabled prevent cold extrusion, this only works on marlin v 1.1
+//#define PREVENT_COLD_EXTRUSION
 #define EXTRUDE_MINTEMP 170
 
 // This option prevents a single extrusion longer than EXTRUDE_MAXLENGTH.
 // Note that for Bowden Extruders a too-small value here may prevent loading.
-#define PREVENT_LENGTHY_EXTRUDE
+//AG disabled prevent lenghthy extrude
+//#define PREVENT_LENGTHY_EXTRUDE
 #define EXTRUDE_MAXLENGTH 200
 
 //===========================================================================
@@ -465,8 +472,10 @@
  * Default Axis Steps Per Unit (steps/mm)
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
+  AG Changed E0 steps from 140 to 500. This 500 steps/mm should apply for both E0 and E1 because "If fewer factors are given than the
+  total number of extruders, the last value applies to the rest" (lines 466-467)
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 1600, 140 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 1600, 500 }
 
 /**
  * Default Max Feed Rate (mm/s)
@@ -503,10 +512,10 @@
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-#define DEFAULT_XJERK                 20.0
-#define DEFAULT_YJERK                 20.0
+#define DEFAULT_XJERK                 60.0  //AG changed from 20 to 60
+#define DEFAULT_YJERK                 60.0  //AG changed from 20 to 60
 #define DEFAULT_ZJERK                  0.4
-#define DEFAULT_EJERK                  10.0
+#define DEFAULT_EJERK                  15.0 //AG changed from 10 to 15
 
 
 //===========================================================================
